@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const Alumno = require('../models/alumnos');
+
+
+
+
+
+//------Login
 
 router.get('/', (req, res, next) => {
   res.render('index');
@@ -22,7 +29,7 @@ router.get('/signin', (req, res, next) => {
 
 
 router.post('/signin', passport.authenticate('local-signin', {
-  successRedirect: '/profile',
+  successRedirect: '/escuela',
   failureRedirect: '/signin',
   passReqToCallback: true
 }));
@@ -53,5 +60,48 @@ function isAuthenticated(req, res, next) {
   }
   res.redirect('/')
 }
+
+
+
+//----Alumno
+router.get('/escuela', async (req, res) => {
+  const alumno = await Alumno.find();
+  res.render('escuela', {
+    alumno
+  });
+});
+
+router.post('/add', async (req, res, next) => {
+  const alumno = new Alumno(req.body);
+  await alumno.save();
+  res.redirect('/escuela');
+});
+
+router.get('/turn/:id', async (req, res, next) => {
+  let { id } = req.params;
+  const alumno = await Alumno.findById(id);
+  alumno.status = !alumno.status;
+  await alumno.save();
+  res.redirect('/escuela');
+});
+
+
+router.get('/edit/:id', async (req, res, next) => {
+  const alumno = await Alumno.findById(req.params.id);
+  console.log(alumno)
+  res.render('edit', { alumno });
+});
+
+router.post('/edit/:id', async (req, res, next) => {
+  const { id } = req.params;
+  await Alumno.updateOne({_id: id}, req.body);
+  res.redirect('/escuela');
+});
+
+router.get('/delete/:id', async (req, res, next) => {
+  let { id } = req.params;
+  await Alumno.remove({_id: id});
+  res.redirect('/escuela');
+});
 
 module.exports = router;

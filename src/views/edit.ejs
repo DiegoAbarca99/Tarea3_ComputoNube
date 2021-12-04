@@ -1,0 +1,27 @@
+<%- include('partials/_header')%>
+<div class="container">
+    <h1>Actualize los datos del alumnado</h1>
+</div>
+
+<div class="container">
+  <div class="row">
+    <!--FORM-->
+    <div class="col-md-5 offset-md-3">
+      <div class="card">
+        <div class="card-body">
+          <form action="/edit/<%= alumno._id %>" method="post">
+            <div class="form-group">
+              <input class="form-control" type="text" name="Nombre" placeholder="Introduzca su Nombre" value="<%= alumno.Nombre %>">
+            </div>
+            <div class="form-group">
+              <input class="form-control" type="text" name="Apellido" placeholder=" Introduza su Apellido" value="<%= alumno.Apellido %>">
+            </div>
+            <button class="btn btn-primary" type="submit">
+              Update 
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
